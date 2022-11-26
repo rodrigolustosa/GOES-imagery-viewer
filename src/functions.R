@@ -336,28 +336,30 @@ make_plot <- function(goes_data,plot_info,title){
     return()
   par()
   if(goes_data$read_with_raster){
-    image.plot(goes_data$data,
-               col = plot_info$palette,
-               breaks = plot_info$breaks,
-               main = pula_linha(title),
-               xlab = "Longitude",
-               ylab = "Latitude",
-               xlim = plot_info$xlim,
-               ylim = plot_info$ylim,
-               zlim = plot_info$zlim)
+    imagePlot(goes_data$data,
+              col = plot_info$palette,
+              breaks = plot_info$breaks,
+              main = pula_linha(title),
+              xlab = "Longitude",
+              ylab = "Latitude",
+              xlim = plot_info$xlim,
+              ylim = plot_info$ylim,
+              zlim = plot_info$zlim,
+              useRaster=T)
     map("world", add = TRUE, col = "white")
   } else {
-    image.plot(z = goes_data$data$values,
-               x = goes_data$data$lon,
-               y = goes_data$data$lat,
-               col = plot_info$palette,
-               breaks = plot_info$breaks,
-               main = pula_linha(title),
-               xlab = "Longitude",
-               ylab = "Latitude",
-               xlim = plot_info$xlim,
-               ylim = plot_info$ylim,
-               zlim = plot_info$zlim)
+    imagePlot(z = goes_data$data$values,
+              x = goes_data$data$lon,
+              y = goes_data$data$lat,
+              col = plot_info$palette,
+              breaks = plot_info$breaks,
+              main = pula_linha(title),
+              xlab = "Longitude",
+              ylab = "Latitude",
+              xlim = plot_info$xlim,
+              ylim = plot_info$ylim,
+              zlim = plot_info$zlim,
+              useRaster=T)
     map("world", add = TRUE, col = "white")
   }
 }

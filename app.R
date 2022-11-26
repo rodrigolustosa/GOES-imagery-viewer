@@ -123,22 +123,29 @@ server <- function(input, output) {
   output$plot_ui <- renderUI({
     delta_x <- imagery_info()$xlim[2] - imagery_info()$xlim[1]
     delta_y <- imagery_info()$ylim[2] - imagery_info()$ylim[1]
-    if(delta_x >= delta_y) {
-      plot.height = 550
-      plot.width = plot.height/delta_y*delta_x
-      if(plot.width > 900){
-        plot.width = 900
-        plot.height = plot.width/delta_x*delta_y
+    plot.asp = delta_y/delta_x
+    if(1 >= plot.asp) {
+      fig.height <- 550/96 # inches
+      plot.plt <- imageplot.setup(legend.width = 1.2, legend.mar = 5.1)$bigplot
+      #fig.height -> plot.height -> plot.width -> fig.width
+      fig.width <- fig.height*(plot.plt[4]-plot.plt[3])/plot.asp/(plot.plt[2]-plot.plt[1])
+      if(fig.width > 900/96){
+        fig.width <- 900/96
+        #fig.width -> plot.width -> plot.height -> fig.height
+        fig.height <- fig.width*(plot.plt[2]-plot.plt[1])*plot.asp/(plot.plt[4]-plot.plt[3])
       }
     }else{
-      plot.width = 550
-      plot.height = plot.width/delta_x*delta_y
-      if(plot.height > 900){
-        plot.height = 900
-        plot.width = plot.height/delta_y*delta_x
+      fig.width = 550/96
+      #fig.width -> plot.width -> plot.height -> fig.height
+      fig.height <- fig.width*(plot.plt[2]-plot.plt[1])*plot.asp/(plot.plt[4]-plot.plt[3])
+      if(fig.height > 900/96){
+        fig.height = 900/96
+        #fig.height -> plot.height -> plot.width -> fig.width
+        fig.width <- fig.height*(plot.plt[4]-plot.plt[3])/plot.asp/(plot.plt[2]-plot.plt[1])
       }
     }
-    plotOutput('plot', width = plot.width, height = plot.height)
+    dev.width <- fig.width; dev.height <- fig.height # device and figure same size
+    plotOutput('plot', width = str_c(dev.width,"in"), height = str_c(dev.height,"in"))
     
   })
   output$plot <- renderPlot({
